@@ -1,6 +1,3 @@
-# src/train.py
-# Финальный скрипт для обучения и экспорта лучшей модели (ResNet18).
-
 import copy
 import random
 import time

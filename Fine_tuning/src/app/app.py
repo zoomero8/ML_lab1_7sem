@@ -1,5 +1,3 @@
-# src/app/app.py
-
 import gradio as gr
 import onnxruntime as rt
 from torchvision import transforms
@@ -9,7 +7,7 @@ from pathlib import Path
 
 # --- Конфигурация ---
 MODEL_PATH = Path(__file__).parent.parent.parent / "models" / "best_model.onnx"
-CLASS_NAMES = ['balls', 'cars', 'dogs']  # Убедитесь, что порядок классов верный!
+CLASS_NAMES = ['balls', 'cars', 'dogs']
 
 # --- Загрузка модели ---
 # Создаем сессию для инференса ONNX модели
