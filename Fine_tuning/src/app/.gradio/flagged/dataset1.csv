@@ -1,0 +1,2 @@
+Загрузите изображение,Результат,timestamp
+.gradio\flagged\Загрузите изображение\db1fca4d4be1897ec9a4\17.jpg,"{""label"": ""dogs"", ""confidences"": [{""label"": ""dogs"", ""confidence"": 0.5821590423583984}, {""label"": ""cars"", ""confidence"": 0.22035209834575653}, {""label"": ""balls"", ""confidence"": 0.19748882949352264}]}",2025-10-11 09:26:24.177059
