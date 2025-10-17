@@ -47,7 +47,7 @@ class TrainConfig:
     model_name: str = "resnet18"  # Наша лучшая модель по итогам экспериментов
     num_classes: int = 3
     learning_rate: float = 0.001
-    num_epochs: int = 10
+    num_epochs: int = 20
     output_model_path: Path = PROJECT_DIR / "models" / "best_model.onnx"
 
 
@@ -98,7 +98,7 @@ def get_dataloaders(config: DataConfig):
     return dataloaders, dataset_sizes, class_names
 
 
-def train_model(model, criterion, optimizer, scheduler, dataloaders, dataset_sizes, num_epochs=10):
+def train_model(model, criterion, optimizer, scheduler, dataloaders, dataset_sizes, num_epochs=20):
     """Основной цикл обучения модели."""
     since = time.time()
     best_model_wts = copy.deepcopy(model.state_dict())

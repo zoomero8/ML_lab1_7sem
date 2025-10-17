@@ -7,7 +7,7 @@ from pathlib import Path
 
 # --- Конфигурация ---
 MODEL_PATH = Path(__file__).parent.parent.parent / "models" / "best_model.onnx"
-CLASS_NAMES = ['balls', 'cars', 'dogs']
+CLASS_NAMES = ['cats', 'dogs', 'hamsters']
 
 # --- Загрузка модели ---
 # Создаем сессию для инференса ONNX модели
@@ -46,7 +46,7 @@ iface = gr.Interface(
     fn=predict,
     inputs=gr.Image(type="pil", label="Загрузите изображение"),
     outputs=gr.Label(num_top_classes=3, label="Результат"),
-    title="Классификатор: Мячи, Машины, Собаки",
+    title="Классификатор: Кошки, Хомяки, Собаки",
     description="Загрузите изображение, чтобы определить, к какому классу оно относится. Модель на основе ResNet18.",
 )
 
