@@ -13,6 +13,9 @@ from torch.optim import lr_scheduler
 from torch.utils.data import DataLoader, random_split
 from torchvision import datasets, transforms
 from tqdm import tqdm
+import os
+from torchvision.utils import save_image
+
 
 # --- 1. Конфигурация проекта и воспроизводимость ---
 
@@ -44,7 +47,8 @@ class DataConfig:
 
 @dataclass
 class TrainConfig:
-    model_name: str = "resnet18"  # Наша лучшая модель по итогам экспериментов
+    model_name: str = "resnet18"
+    # Наша лучшая модель по итогам экспериментов
     num_classes: int = 3
     learning_rate: float = 0.001
     num_epochs: int = 20
@@ -57,10 +61,10 @@ def get_dataloaders(config: DataConfig):
     """Создает и возвращает обучающий и валидационный загрузчики данных."""
     data_transforms = {
         'train': transforms.Compose([
-            transforms.RandomResizedCrop(config.img_size),
-            transforms.RandomHorizontalFlip(),
-            transforms.ToTensor(),
-            transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
+                 transforms.RandomResizedCrop(config.img_size, scale=(0.85, 1.0), ratio=(0.9, 1.1)),
+                 transforms.RandomHorizontalFlip(),
+                 transforms.ToTensor(),
+                 transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225]),
         ]),
         'val': transforms.Compose([
             transforms.Resize(256),
@@ -175,6 +179,29 @@ def export_to_onnx(model, config: TrainConfig, image_size: int):
     print(f"\nМодель успешно экспортирована в {config.output_model_path}")
 
 
+def save_augmented_samples(dataloader, save_dir, num_batches=1):
+    """
+    Сохраняет примеры изображений после трансформаций.
+    save_dir — папка, куда будут сохраняться картинки.
+    num_batches — сколько батчей сохранить (по умолчанию 1).
+    """
+    os.makedirs(save_dir, exist_ok=True)
+    print(f"Сохраняю аугментированные изображения в {save_dir}")
+
+    batch_count = 0
+    for inputs, labels in dataloader:
+        for i, img in enumerate(inputs):
+            filename = f"batch{batch_count}_img{i}_label{labels[i].item()}.jpg"
+            filepath = os.path.join(save_dir, filename)
+            # изображения нормализованы, поэтому "разнормализуем" их для просмотра
+            img_show = img * torch.tensor([0.229, 0.224, 0.225]).view(3,1,1) + torch.tensor([0.485, 0.456, 0.406]).view(3,1,1)
+            save_image(img_show, filepath)
+        batch_count += 1
+        if batch_count >= num_batches:
+            break
+
+    print("Сохранено")
+
 # --- 4. Основная функция ---
 
 def main():
@@ -187,6 +214,7 @@ def main():
 
     # 1. Загрузка данных
     dataloaders, dataset_sizes, class_names = get_dataloaders(data_cfg)
+    save_augmented_samples(dataloaders['train'], PROJECT_DIR / "data" / "augmented_samples", num_batches=2)
     if len(class_names) != train_cfg.num_classes:
         raise ValueError(f"Ошибка! Найдено {len(class_names)} классов, а в конфиге {train_cfg.num_classes}")
 

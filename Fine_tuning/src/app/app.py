@@ -2,12 +2,12 @@ import gradio as gr
 import onnxruntime as rt
 from torchvision import transforms
 from PIL import Image
-import torch
+import torch    
 from pathlib import Path
 
 # --- Конфигурация ---
 MODEL_PATH = Path(__file__).parent.parent.parent / "models" / "best_model.onnx"
-CLASS_NAMES = ['cats', 'dogs', 'hamsters']
+CLASS_NAMES = ['cats', 'dogs', 'humsters']
 
 # --- Загрузка модели ---
 # Создаем сессию для инференса ONNX модели
